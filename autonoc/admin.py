@@ -2,22 +2,24 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-
 @admin.register(Operacao)
 class OperacaoAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome')
     search_fields = ['nome']
 
-@admin.register(Status)
-class StatusAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome')
-    search_fields = ['nome']
-
-@admin.register(Consultor)
-class ConsultorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'telefone', 'ativo')
-    list_filter = ('ativo',)
-    search_fields = ['nome']
+@admin.register(Empresa)
+class EmpresaAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'razao_social',
+        'nome',
+        'cnpj',
+        'logradouro',
+        'numero',
+        'bairro',
+        'cidade'
+    )
+    search_fields = ['nome', 'razao_social']
 
 @admin.register(Estado)
 class EstadoAdmin(admin.ModelAdmin):
@@ -25,20 +27,10 @@ class EstadoAdmin(admin.ModelAdmin):
     list_filter = ('operacao',)
     search_fields = ['nome']
 
-@admin.register(Servico)
-class ServicoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome')
-    search_fields = ['nome']
-
-@admin.register(Empresa)
-class EmpresaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'operacao', 'nome', 'cnpj')
-    list_filter = ('operacao',)
-    search_fields = ['nome']
-
-@admin.register(CanalVenda)
-class CanalVendaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome')
+@admin.register(Cidade)
+class CidadeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'sigla', 'estado')
+    list_filter = ('estado',)
     search_fields = ['nome']
 
 @admin.register(Cliente)
@@ -49,14 +41,14 @@ class ClienteAdmin(admin.ModelAdmin):
         'nome',
         'cnpj',
         'logradouro',
+        'numero',
         'bairro',
         'cidade',
-        'estado',
         'cep',
         'telefone',
         'email',
     )
-    list_filter = ('estado', 'cidade')
+    list_filter = ('cidade',)
     search_fields = ['razao_social']
 
 @admin.register(Conexao)
@@ -69,10 +61,9 @@ class ConexaoAdmin(admin.ModelAdmin):
         'canal_venda',
         'status',
         'cliente',
-        'logradouro',
-        'cidade',
-        'estado',
-        'servico',
+        'logradouro_instalacao',
+        'cidade_instalacao',
+        'servico_contrato',
         'banda',
         'data_contrato',
         'data_ativacao',
@@ -80,8 +71,29 @@ class ConexaoAdmin(admin.ModelAdmin):
         'observacao',
         'consultor',
     )
-    list_filter = ('estado', 'cidade')
+    list_filter = ('cidade_instalacao',)
     search_fields = ['empresa']
+
+@admin.register(StatusContrato)
+class StatusContratoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'banda')
+    search_fields = ['nome']
+
+@admin.register(Consultor)
+class ConsultorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome', 'telefone', 'ativo')
+    list_filter = ('ativo',)
+    search_fields = ['nome']
+
+@admin.register(ServicoContrato)
+class ServicoContratoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome')
+    search_fields = ['nome']
+
+@admin.register(CanalVenda)
+class CanalVendaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome')
+    search_fields = ['nome']
 
 @admin.register(FormaPagamento)
 class FormaPagamentoAdmin(admin.ModelAdmin):
@@ -94,6 +106,8 @@ class FaturamentoAdmin(admin.ModelAdmin):
         'id',
         'conexao',
         'valor',
+        'mes_vencimento',
+        'ano_vencimento',
         'vencimento',
         'valor_faturado',
         'valor_recebido',
@@ -103,15 +117,76 @@ class FaturamentoAdmin(admin.ModelAdmin):
         'data_nf',
         'data_envio_nf',
     )
+    list_filter = ('mes_vencimento', 'ano_vencimento')
     search_fields = ['conexao']
 
-@admin.register(Financeiro)
-class FinanceiroAdmin(admin.ModelAdmin):
+@admin.register(FinanceiroCliente)
+class FinanceiroClienteAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'conexao',
         'forma_de_pagamento',
         'saldo_a_pagar',
+        'mes_debito',
+        'ano_debito',
         'data_debito',
     )
+    list_filter = ('mes_debito', 'ano_debito')
     search_fields = ['conexao']
+
+@admin.register(Estacao)
+class EstacaoAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'nome',
+        'logradouro',
+        'numero',
+        'bairro',
+        'cidade',
+    )
+    list_filter = ('cidade',)
+    search_fields = ['nome', 'cidade']
+
+@admin.register(Equipamento)
+class EquipamentoAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'nome',
+        'modelo',
+        'serial',
+        'mac',
+        'ip',
+    )
+    search_fields = ['nome', 'modelo']
+
+@admin.register(Vlan)
+class VlanAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'nome',
+    )
+    search_fields = ['nome']
+
+@admin.register(Circuito)
+class CircuitoAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'conexao',
+        'ponta_a',
+        'ponta_b',
+        'id_sensor_prtg',
+        'designacao',
+        'estacao',
+        'rack',
+        'fila',
+        'porta',
+        'equipamento_acesso',
+        'ip_circuito',
+        'submask',
+        'vlan',
+        'dgo_cto',
+        'porta_dgo_cto',
+        'equipamento_ultima_milha',
+    )
+    list_filter = ('estacao', 'vlan')
+    search_fields = ['conexao', 'designacao']
