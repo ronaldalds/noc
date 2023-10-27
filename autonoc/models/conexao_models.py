@@ -5,7 +5,7 @@ from .endereco_models import Cidade, Operacao
 
 class StatusContrato(models.Model):
     nome = models.CharField(max_length=128)
-    banda = models.IntegerField()
+    banda = models.BooleanField(default=True)
     
     class Meta:
         verbose_name_plural = "Status"
@@ -72,4 +72,4 @@ class Conexao(models.Model):
         verbose_name_plural = "Conexões"
 
     def __str__(self) -> str:
-        return f"{self.cliente} - {self.logradouro},{self.cidade}"
+        return f"{self.cliente.cnpj} - {self.cliente.razao_social}"

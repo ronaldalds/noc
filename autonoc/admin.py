@@ -71,8 +71,8 @@ class ConexaoAdmin(admin.ModelAdmin):
         'observacao',
         'consultor',
     )
-    list_filter = ('cidade_instalacao',)
-    search_fields = ['empresa']
+    list_filter = ('cidade_instalacao', 'operacao', 'status')  # Adicionado 'operacao' e 'status' como campos filtráveis
+    search_fields = ['cliente__nome', 'cliente__cnpj']
 
 @admin.register(StatusContrato)
 class StatusContratoAdmin(admin.ModelAdmin):
