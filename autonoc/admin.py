@@ -64,19 +64,21 @@ class ConexaoAdmin(admin.ModelAdmin):
         'logradouro_instalacao',
         'cidade_instalacao',
         'servico_contrato',
-        'banda',
+        'banda_contrato',
         'data_contrato',
         'data_ativacao',
         'data_vencimento',
         'observacao',
         'consultor',
+        'sinal',
+        'banda_reducao',
     )
-    list_filter = ('cidade_instalacao', 'operacao', 'status')  # Adicionado 'operacao' e 'status' como campos filtráveis
+    list_filter = ('cidade_instalacao', 'operacao', 'status', 'sinal')  # Adicionado 'operacao' e 'status' como campos filtráveis
     search_fields = ['cliente__nome', 'cliente__cnpj']
 
 @admin.register(StatusContrato)
 class StatusContratoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'banda')
+    list_display = ('id', 'nome', 'observacao')
     search_fields = ['nome']
 
 @admin.register(Consultor)

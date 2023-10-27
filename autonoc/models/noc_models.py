@@ -1,6 +1,7 @@
 from django.db import models
 from .endereco_models import Cidade
 from .conexao_models import Conexao
+from django.core.exceptions import ValidationError
     
 class Estacao(models.Model):
     nome = models.CharField(max_length=128)
@@ -27,15 +28,20 @@ class Equipamento(models.Model):
     
     def __str__(self) -> str:
         return f"{self.nome} - {self.modelo}"
-    
+
 class Vlan(models.Model):
-    nome = models.CharField(max_length=128)
+    id = models.IntegerField(primary_key=True, help_text="valor entre 1 á 4094")
+    nome = models.CharField(max_length=128, unique=True, help_text="nome deve ser único")
 
     class Meta:
         verbose_name_plural = "VLANs"
     
     def __str__(self) -> str:
         return self.nome
+    
+    def clean(self):
+        if self.id < 1 or self.id > 4094:
+            raise ValidationError("O valor da VLAN deve estar entre 1 e 4094.")
 
 class Circuito(models.Model):
     conexao = models.ForeignKey(Conexao, on_delete=models.PROTECT)

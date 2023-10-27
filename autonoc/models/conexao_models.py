@@ -2,11 +2,12 @@ from django.db import models
 from .empresa_models import Empresa
 from .cliente_models import Cliente
 from .endereco_models import Cidade, Operacao
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 class StatusContrato(models.Model):
-    nome = models.CharField(max_length=128)
-    banda = models.BooleanField(default=True)
-    
+    nome = models.CharField(max_length=128, verbose_name="nome *")
+    observacao = models.TextField(max_length=512)
     class Meta:
         verbose_name_plural = "Status"
     
@@ -61,15 +62,31 @@ class Conexao(models.Model):
     logradouro_instalacao = models.CharField(max_length=128)
     cidade_instalacao = models.ForeignKey(Cidade, on_delete=models.PROTECT)
     servico_contrato = models.ForeignKey(ServicoContrato, on_delete=models.PROTECT)
-    banda = models.IntegerField()
+    banda_contrato = models.IntegerField()
     data_contrato = models.DateField()
     data_ativacao = models.DateField()
     data_vencimento = models.DateField()
     observacao = models.TextField()
     consultor = models.ForeignKey(Consultor, on_delete=models.PROTECT)
+    sinal = models.BooleanField(default=True)
+    banda_reducao = models.IntegerField()
 
     class Meta:
         verbose_name_plural = "Conexões"
 
     def __str__(self) -> str:
         return f"{self.cliente.cnpj} - {self.cliente.razao_social}"
+
+@receiver(pre_save, sender=Conexao)
+def status_contrato_post_save(sender, instance, **kwargs):
+    if not instance._state.adding:
+        try:
+            # Obtém o objeto no banco de dados com os valores atuais
+            old_instance = Conexao.objects.get(pk=instance.pk)
+            print(old_instance.sinal, instance.sinal)
+        except Conexao.DoesNotExist:
+            old_instance = None
+
+        if old_instance and (old_instance.sinal == True) and (instance.sinal == False):
+            # O campo 'sinal' foi alterado
+            print(f"\n\n\n\nO campo 'sinal' foi alterado de {old_instance.sinal} para {instance.sinal}. Executando comando... {instance.banda_reducao}\n\n\n\n")
