@@ -21,7 +21,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # uso em desenvolvimento
-# CMD python manage.py runserver 0.0.0.0:8002
+# CMD python manage.py runserver 0.0.0.0:8003
 
 # uso em produção
-CMD gunicorn core.wsgi:application --bind 0.0.0.0:8002
+CMD gunicorn core.wsgi:application --bind 0.0.0.0:8003
