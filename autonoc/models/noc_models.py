@@ -30,7 +30,7 @@ class Equipamento(models.Model):
         return f"{self.nome} - {self.modelo}"
 
 class Vlan(models.Model):
-    id = models.IntegerField(primary_key=True, help_text="valor entre 1 á 4094")
+    numero_vlan = models.IntegerField(help_text="valor entre 1 á 4094")
     nome = models.CharField(max_length=128, unique=True, help_text="nome deve ser único")
 
     class Meta:
@@ -40,7 +40,7 @@ class Vlan(models.Model):
         return self.nome
     
     def clean(self):
-        if self.id < 1 or self.id > 4094:
+        if self.numero_vlan < 1 or self.numero_vlan > 4094:
             raise ValidationError("O valor da VLAN deve estar entre 1 e 4094.")
 
 class Circuito(models.Model):
@@ -56,7 +56,7 @@ class Circuito(models.Model):
     equipamento_acesso = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_acesso')
     ip_circuito = models.CharField(max_length=128)
     submask = models.IntegerField()
-    vlan = models.ForeignKey(Vlan, on_delete=models.PROTECT)
+    id_vlan = models.ForeignKey(Vlan, on_delete=models.PROTECT)
     dgo_cto = models.CharField(max_length=128)
     porta_dgo_cto = models.IntegerField()
     equipamento_ultima_milha = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ultima_milha')
