@@ -19,8 +19,6 @@ class Estacao(models.Model):
 class Equipamento(models.Model):
     nome = models.CharField(max_length=128)
     modelo = models.CharField(max_length=128)
-    serial = models.CharField(max_length=128)
-    mac = models.CharField(max_length=128)
     ip = models.CharField(max_length=128)
 
     class Meta:

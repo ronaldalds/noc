@@ -155,8 +155,6 @@ class EquipamentoAdmin(admin.ModelAdmin):
         'id',
         'nome',
         'modelo',
-        'serial',
-        'mac',
         'ip',
     )
     search_fields = ['nome', 'modelo']
@@ -164,10 +162,10 @@ class EquipamentoAdmin(admin.ModelAdmin):
 @admin.register(Vlan)
 class VlanAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
+        'numero_vlan',
         'nome',
     )
-    search_fields = ['nome']
+    search_fields = ['nome', 'numero_vlan']
 
 @admin.register(Circuito)
 class CircuitoAdmin(admin.ModelAdmin):
@@ -185,10 +183,10 @@ class CircuitoAdmin(admin.ModelAdmin):
         'equipamento_acesso',
         'ip_circuito',
         'submask',
-        'vlan',
+        'id_vlan',
         'dgo_cto',
         'porta_dgo_cto',
         'equipamento_ultima_milha',
     )
-    list_filter = ('estacao', 'vlan')
+    list_filter = ('estacao', 'id_vlan')
     search_fields = ['conexao', 'designacao']
