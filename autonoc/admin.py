@@ -1,17 +1,19 @@
 from django.contrib import admin
+from reversion.admin import VersionAdmin
 from .models import *
 
 # Register your models here.
 @admin.register(Operacao)
-class OperacaoAdmin(admin.ModelAdmin):
+class OperacaoAdmin(VersionAdmin):
     list_display = ('id', 'nome')
     search_fields = ['nome']
 
 @admin.register(Empresa)
-class EmpresaAdmin(admin.ModelAdmin):
+class EmpresaAdmin(VersionAdmin):
     list_display = (
         'id',
         'razao_social',
+        'nome_fantasia',
         'nome',
         'cnpj',
         'logradouro',
@@ -22,19 +24,19 @@ class EmpresaAdmin(admin.ModelAdmin):
     search_fields = ['nome', 'razao_social']
 
 @admin.register(Estado)
-class EstadoAdmin(admin.ModelAdmin):
+class EstadoAdmin(VersionAdmin):
     list_display = ('id', 'operacao', 'nome', 'uf')
     list_filter = ('operacao',)
     search_fields = ['nome']
 
 @admin.register(Cidade)
-class CidadeAdmin(admin.ModelAdmin):
+class CidadeAdmin(VersionAdmin):
     list_display = ('id', 'nome', 'sigla', 'estado')
     list_filter = ('estado',)
     search_fields = ['nome']
 
 @admin.register(Cliente)
-class ClienteAdmin(admin.ModelAdmin):
+class ClienteAdmin(VersionAdmin):
     list_display = (
         'id',
         'razao_social',
@@ -52,7 +54,7 @@ class ClienteAdmin(admin.ModelAdmin):
     search_fields = ['razao_social']
 
 @admin.register(Conexao)
-class ConexaoAdmin(admin.ModelAdmin):
+class ConexaoAdmin(VersionAdmin):
     list_display = (
         'id',
         'operacao',
@@ -73,37 +75,37 @@ class ConexaoAdmin(admin.ModelAdmin):
         'sinal',
         'banda_reducao',
     )
-    list_filter = ('cidade_instalacao', 'operacao', 'status', 'sinal')  # Adicionado 'operacao' e 'status' como campos filtráveis
+    list_filter = ('cidade_instalacao', 'operacao', 'status', 'sinal')
     search_fields = ['cliente__nome', 'cliente__cnpj']
 
 @admin.register(StatusContrato)
-class StatusContratoAdmin(admin.ModelAdmin):
+class StatusContratoAdmin(VersionAdmin):
     list_display = ('id', 'nome', 'observacao')
     search_fields = ['nome']
 
 @admin.register(Consultor)
-class ConsultorAdmin(admin.ModelAdmin):
+class ConsultorAdmin(VersionAdmin):
     list_display = ('id', 'nome', 'telefone', 'ativo')
     list_filter = ('ativo',)
     search_fields = ['nome']
 
 @admin.register(ServicoContrato)
-class ServicoContratoAdmin(admin.ModelAdmin):
+class ServicoContratoAdmin(VersionAdmin):
     list_display = ('id', 'nome')
     search_fields = ['nome']
 
 @admin.register(CanalVenda)
-class CanalVendaAdmin(admin.ModelAdmin):
+class CanalVendaAdmin(VersionAdmin):
     list_display = ('id', 'nome')
     search_fields = ['nome']
 
 @admin.register(FormaPagamento)
-class FormaPagamentoAdmin(admin.ModelAdmin):
+class FormaPagamentoAdmin(VersionAdmin):
     list_display = ('id', 'tipo')
     search_fields = ['tipo']
 
 @admin.register(Faturamento)
-class FaturamentoAdmin(admin.ModelAdmin):
+class FaturamentoAdmin(VersionAdmin):
     list_display = (
         'id',
         'conexao',
@@ -123,7 +125,7 @@ class FaturamentoAdmin(admin.ModelAdmin):
     search_fields = ['conexao']
 
 @admin.register(FinanceiroCliente)
-class FinanceiroClienteAdmin(admin.ModelAdmin):
+class FinanceiroClienteAdmin(VersionAdmin):
     list_display = (
         'id',
         'conexao',
@@ -137,7 +139,7 @@ class FinanceiroClienteAdmin(admin.ModelAdmin):
     search_fields = ['conexao']
 
 @admin.register(Estacao)
-class EstacaoAdmin(admin.ModelAdmin):
+class EstacaoAdmin(VersionAdmin):
     list_display = (
         'id',
         'nome',
@@ -150,17 +152,21 @@ class EstacaoAdmin(admin.ModelAdmin):
     search_fields = ['nome', 'cidade']
 
 @admin.register(Equipamento)
-class EquipamentoAdmin(admin.ModelAdmin):
+class EquipamentoAdmin(VersionAdmin):
     list_display = (
         'id',
         'nome',
         'modelo',
         'ip',
+        'estacao',
+        'rack',
+        'fila',
     )
+    list_filter = ('estacao',)
     search_fields = ['nome', 'modelo']
 
 @admin.register(Vlan)
-class VlanAdmin(admin.ModelAdmin):
+class VlanAdmin(VersionAdmin):
     list_display = (
         'numero_vlan',
         'nome',
@@ -168,25 +174,27 @@ class VlanAdmin(admin.ModelAdmin):
     search_fields = ['nome', 'numero_vlan']
 
 @admin.register(Circuito)
-class CircuitoAdmin(admin.ModelAdmin):
+class CircuitoAdmin(VersionAdmin):
     list_display = (
         'id',
         'conexao',
         'ponta_a',
+        'interface_ponta_a',
         'ponta_b',
+        'interface_ponta_b',
         'id_sensor_prtg',
         'designacao',
-        'estacao',
-        'rack',
-        'fila',
-        'porta',
-        'equipamento_acesso',
         'ip_circuito',
         'submask',
         'id_vlan',
-        'dgo_cto',
-        'porta_dgo_cto',
-        'equipamento_ultima_milha',
+        # 'estacao',
+        # 'rack',
+        # 'fila',
+        # 'porta',
+        # 'equipamento_acesso',
+        # 'dgo_cto',
+        # 'porta_dgo_cto',
+        # 'equipamento_ultima_milha',
     )
-    list_filter = ('estacao', 'id_vlan')
+    # list_filter = ('id_vlan',)
     search_fields = ['conexao', 'designacao']

@@ -20,6 +20,9 @@ class Equipamento(models.Model):
     nome = models.CharField(max_length=128)
     modelo = models.CharField(max_length=128)
     ip = models.CharField(max_length=128)
+    estacao = models.ForeignKey(Estacao, on_delete=models.PROTECT)
+    rack = models.CharField(max_length=128, blank=True, null=True)
+    fila = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Equipamentos"
@@ -43,24 +46,30 @@ class Vlan(models.Model):
 
 class Circuito(models.Model):
     conexao = models.ForeignKey(Conexao, on_delete=models.PROTECT)
-    ponta_a = models.CharField(max_length=128)
-    ponta_b = models.CharField(max_length=128)
+    ponta_a = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ponta_a')
+    interface_ponta_a = models.CharField(max_length=128)
+    ponta_b = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ponta_b')
+    interface_ponta_b = models.CharField(max_length=128)
     id_sensor_prtg = models.IntegerField()
     designacao = models.CharField(max_length=128, unique=True)
-    estacao = models.ForeignKey(Estacao, on_delete=models.PROTECT)
-    rack = models.CharField(max_length=128)
-    fila = models.CharField(max_length=128)
-    porta = models.CharField(max_length=128)
-    equipamento_acesso = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_acesso')
     ip_circuito = models.CharField(max_length=128)
-    submask = models.IntegerField()
+    submask = models.IntegerField(help_text="valor entre 0 á 32")
     id_vlan = models.ForeignKey(Vlan, on_delete=models.PROTECT)
-    dgo_cto = models.CharField(max_length=128)
-    porta_dgo_cto = models.IntegerField()
-    equipamento_ultima_milha = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ultima_milha')
+    # estacao = models.ForeignKey(Estacao, on_delete=models.PROTECT)
+    # rack = models.CharField(max_length=128)
+    # fila = models.CharField(max_length=128)
+    # porta = models.CharField(max_length=128)
+    # equipamento_acesso = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_acesso')
+    # dgo_cto = models.CharField(max_length=128)
+    # porta_dgo_cto = models.IntegerField()
+    # equipamento_ultima_milha = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ultima_milha')
 
     class Meta:
         verbose_name_plural = "Circuitos"
+    
+    def clean(self):
+        if self.numero_vlan < 0 or self.numero_vlan > 32:
+            raise ValidationError("O valor da SUBMASK deve estar entre 0 e 32.")
     
     def __str__(self) -> str:
         return self.designacao
