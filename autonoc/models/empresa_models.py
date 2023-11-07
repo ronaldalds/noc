@@ -15,4 +15,4 @@ class Empresa(models.Model):
         verbose_name_plural = "Empresas"
     
     def __str__(self) -> str:
-        return self.nome
+        return self.razao_social

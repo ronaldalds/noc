@@ -38,7 +38,7 @@ class Vlan(models.Model):
         verbose_name_plural = "VLANs"
     
     def __str__(self) -> str:
-        return self.nome
+        return self.numero_vlan
     
     def clean(self):
         if self.numero_vlan < 1 or self.numero_vlan > 4094:
