@@ -68,7 +68,7 @@ class Circuito(models.Model):
         verbose_name_plural = "Circuitos"
     
     def clean(self):
-        if self.numero_vlan < 0 or self.numero_vlan > 32:
+        if self.submask < 0 or self.submask > 32:
             raise ValidationError("O valor da SUBMASK deve estar entre 0 e 32.")
     
     def __str__(self) -> str:
