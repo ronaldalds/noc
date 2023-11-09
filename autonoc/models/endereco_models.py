@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from django.db import models
 
 class Operacao(models.Model):
@@ -21,12 +22,25 @@ class Estado(models.Model):
         return self.uf
 
 class Cidade(models.Model):
-    nome = models.CharField(max_length=128)
-    sigla = models.CharField(max_length=3)
+    municipio = models.CharField(max_length=128)
+    sigla_municipio = models.CharField(max_length=3)
+    localidade = models.CharField(max_length=128, null=True, blank=True)
+    sigla_localidade = models.CharField(max_length=3, null=True, blank=True)
+    cod_cidade = models.CharField(max_length=7)
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT)
 
     class Meta:
         verbose_name_plural = "Cidades"
     
+    def save(self, *args, **kwargs):
+        if self.localidade:
+            self.cod_cidade = f"{self.sigla_municipio}-{self.sigla_localidade}"
+        else:
+            self.cod_cidade = self.sigla_municipio
+        super().save(*args, **kwargs)
+    
     def __str__(self) -> str:
-        return f"{self.nome} - {self.estado.uf}"
+        if self.localidade:
+            return f"{self.municipio}/{self.localidade} - {self.estado.uf}"
+        
+        return f"{self.municipio} - {self.estado.uf}"

@@ -27,10 +27,11 @@ class Consultor(models.Model):
 
 class ServicoContrato(models.Model):
     nome = models.CharField(max_length=128)
+    sigla = models.CharField(max_length=6)
 
     class Meta:
         verbose_name_plural = "Serviços do Contrato"
-    
+
     def __str__(self) -> str:
         return self.nome
 
@@ -48,7 +49,7 @@ class FormaPagamento(models.Model):
 
     class Meta:
         verbose_name_plural = "Formas de Pagamento"
-    
+
     def __str__(self) -> str:
         return self.tipo
 
@@ -70,12 +71,21 @@ class Conexao(models.Model):
     consultor = models.ForeignKey(Consultor, on_delete=models.PROTECT)
     sinal = models.BooleanField(default=True)
     banda_reducao = models.IntegerField()
+    cod_contrato = models.CharField(max_length=128)
+    designacao = models.CharField(max_length=128, unique=True, null=True, blank=True)
+    ativo = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Conexões"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super().save(*args, **kwargs)
+        self.designacao = f"{self.cidade_instalacao.estado.uf}.{self.cidade_instalacao.sigla}-{self.servico_contrato.sigla}-{self.cod_contrato}-{self.pk}"
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f"{self.cliente.cnpj} - {self.cliente.razao_social}"
+        return f"{self.cliente.cnpj} - {self.cliente.nome_fantasia} - {self.cod}"
 
 @receiver(pre_save, sender=Conexao)
 def status_contrato_post_save(sender, instance, **kwargs):

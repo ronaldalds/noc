@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Log
     'reversion',
     # APP
+    'import_export',
     'autonoc',
 ]
 

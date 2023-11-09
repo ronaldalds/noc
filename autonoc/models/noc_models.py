@@ -46,23 +46,14 @@ class Vlan(models.Model):
 
 class Circuito(models.Model):
     conexao = models.ForeignKey(Conexao, on_delete=models.PROTECT)
-    ponta_a = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ponta_a')
-    interface_ponta_a = models.CharField(max_length=128)
+    ponta_a = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ponta_a', blank=True, null=True)
+    interface_ponta_a = models.CharField(max_length=128, blank=True, null=True)
     ponta_b = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ponta_b')
     interface_ponta_b = models.CharField(max_length=128)
     id_sensor_prtg = models.IntegerField()
-    designacao = models.CharField(max_length=128, unique=True)
     ip_circuito = models.CharField(max_length=128)
     submask = models.IntegerField(help_text="valor entre 0 á 32")
     id_vlan = models.ForeignKey(Vlan, on_delete=models.PROTECT)
-    # estacao = models.ForeignKey(Estacao, on_delete=models.PROTECT)
-    # rack = models.CharField(max_length=128)
-    # fila = models.CharField(max_length=128)
-    # porta = models.CharField(max_length=128)
-    # equipamento_acesso = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_acesso')
-    # dgo_cto = models.CharField(max_length=128)
-    # porta_dgo_cto = models.IntegerField()
-    # equipamento_ultima_milha = models.ForeignKey(Equipamento, on_delete=models.PROTECT, related_name='circuito_ultima_milha')
 
     class Meta:
         verbose_name_plural = "Circuitos"
@@ -72,4 +63,4 @@ class Circuito(models.Model):
             raise ValidationError("O valor da SUBMASK deve estar entre 0 e 32.")
     
     def __str__(self) -> str:
-        return self.designacao
+        return self.conexao.designacao

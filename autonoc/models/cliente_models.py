@@ -2,6 +2,7 @@ from django.db import models
 from .endereco_models import Cidade
 
 class Cliente(models.Model):
+    nome_fantasia = models.CharField(max_length=128)
     razao_social = models.CharField(max_length=128)
     nome = models.CharField(max_length=128)
     cnpj = models.CharField(max_length=128)
@@ -17,4 +18,4 @@ class Cliente(models.Model):
         verbose_name_plural = "Clientes"
     
     def __str__(self) -> str:
-        return self.razao_social
+        return self.nome_fantasia
