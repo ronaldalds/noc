@@ -81,7 +81,7 @@ class Conexao(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             super().save(*args, **kwargs)
-        self.designacao = f"{self.cidade_instalacao.estado.uf}.{self.cidade_instalacao.sigla}-{self.servico_contrato.sigla}-{self.cod_contrato}-{self.pk}"
+        self.designacao = f"{self.cidade_instalacao.estado.uf}.{self.cidade_instalacao.cod_cidade}-{self.servico_contrato.sigla}-{self.cod_contrato}-{self.pk}"
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

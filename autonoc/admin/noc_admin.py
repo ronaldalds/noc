@@ -1,10 +1,10 @@
 from django.contrib import admin
 from reversion.admin import VersionAdmin
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportMixin
 from ..models import *
 
 @admin.register(Estacao)
-class EstacaoAdmin(VersionAdmin):
+class EstacaoAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'id',
         'nome',
@@ -18,7 +18,7 @@ class EstacaoAdmin(VersionAdmin):
     search_fields = ['nome', 'cidade']
 
 @admin.register(Equipamento)
-class EquipamentoAdmin(VersionAdmin):
+class EquipamentoAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'id',
         'nome',
@@ -33,7 +33,7 @@ class EquipamentoAdmin(VersionAdmin):
     search_fields = ['nome', 'modelo']
 
 @admin.register(Vlan)
-class VlanAdmin(VersionAdmin):
+class VlanAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'numero_vlan',
         'nome',
@@ -42,7 +42,7 @@ class VlanAdmin(VersionAdmin):
     search_fields = ['nome', 'numero_vlan']
 
 @admin.register(Circuito)
-class CircuitoAdmin(ExportMixin, VersionAdmin):
+class CircuitoAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'id',
         'conexao',

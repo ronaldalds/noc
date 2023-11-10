@@ -1,9 +1,10 @@
 from django.contrib import admin
 from reversion.admin import VersionAdmin
+from import_export.admin import ImportExportMixin
 from ..models import *
 
 @admin.register(Faturamento)
-class FaturamentoAdmin(VersionAdmin):
+class FaturamentoAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'id',
         'conexao',
@@ -24,7 +25,7 @@ class FaturamentoAdmin(VersionAdmin):
     search_fields = ['conexao']
 
 @admin.register(FinanceiroCliente)
-class FinanceiroClienteAdmin(VersionAdmin):
+class FinanceiroClienteAdmin(ImportExportMixin, VersionAdmin):
     list_display = (
         'id',
         'conexao',
