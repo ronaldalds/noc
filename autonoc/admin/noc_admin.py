@@ -1,5 +1,6 @@
 from django.contrib import admin
 from reversion.admin import VersionAdmin
+from django.utils.html import format_html
 from import_export.admin import ImportExportMixin
 from ..models import *
 
@@ -55,6 +56,7 @@ class CircuitoAdmin(ImportExportMixin, VersionAdmin):
         'submask',
         'id_vlan',
         'get_conexao_designacao',
+        'url_link',
     )
     list_display_links = list_display
     search_fields = [
@@ -65,9 +67,15 @@ class CircuitoAdmin(ImportExportMixin, VersionAdmin):
     
     readonly_fields = [
         'get_conexao_designacao',
+        'url_link',
     ]
 
+    def url_link(self, obj):
+        if obj.id_sensor_prtg:
+            return format_html("<a href='http://prtg.online.net.br:8002/sensor.htm?id={id}&tabid=2'>sensor prtg - {id}</a>", id=obj.id_sensor_prtg)
+    
     def get_conexao_designacao(self, obj):
         return obj.conexao.designacao
     
+    url_link.short_description = 'URL'
     get_conexao_designacao.short_description = 'Designacao'
