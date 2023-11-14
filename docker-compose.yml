@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  autonoc:
+    container_name: autonoc
+    build: .
+    image: noc:0.0.1
+    volumes:
+      - .:/app
+    ports:
+      - 8003:8003
+    tty: true
+    depends_on:
+      - psql_noc
+
+  psql_noc:
+    image: postgres:latest
+    container_name: psql-noc
+    environment:
+      POSTGRES_DB: noc
+      POSTGRES_USER: ralds
+      POSTGRES_PASSWORD: ralds
+    ports:
+      - "5433:5432"
+    # volumes:
+    #   - ./data-noc:/var/lib/postgresql/data
