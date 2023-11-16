@@ -93,7 +93,6 @@ def status_contrato_post_save(sender, instance, **kwargs):
         try:
             # Obtém o objeto no banco de dados com os valores atuais
             old_instance = Conexao.objects.get(pk=instance.pk)
-            print(old_instance.sinal, instance.sinal)
         except Conexao.DoesNotExist:
             old_instance = None
 

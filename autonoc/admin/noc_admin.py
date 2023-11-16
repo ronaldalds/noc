@@ -72,7 +72,7 @@ class CircuitoAdmin(ImportExportMixin, VersionAdmin):
 
     def url_link(self, obj):
         if obj.id_sensor_prtg:
-            return format_html("<a href='http://prtg.online.net.br:8002/sensor.htm?id={id}&tabid=2'>sensor prtg - {id}</a>", id=obj.id_sensor_prtg)
+            return format_html("<a href='http://prtg.online.net.br:8002/sensor.htm?id={id}&tabid=2' target='_blank'>sensor prtg - {id}</a>", id=obj.id_sensor_prtg)
     
     def get_conexao_designacao(self, obj):
         return obj.conexao.designacao
